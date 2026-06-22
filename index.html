@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mariachi EB">
+<title>Mariachi Estrella Brillante</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────── */
+:root {
+  --bg:        #0d0d1a;
+  --bg2:       #13131f;
+  --surface:   #1a1a2e;
+  --surface2:  #222238;
+  --surface3:  #2c2c45;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --gold:      #f0b429;
+  --gold-lt:   #ffd166;
+  --gold-dim:  rgba(240,180,41,0.12);
+  --gold-dim2: rgba(240,180,41,0.06);
+  --text:      #eeeaf4;
+  --text2:     #9b97b0;
+  --text3:     #5a566e;
+  --red:       #e05252;
+  --red-dim:   rgba(224,82,82,0.14);
+  --green:     #4ecb8d;
+  --green-dim: rgba(78,203,141,0.12);
+  --amber:     #f5a623;
+  --amber-dim: rgba(245,166,35,0.13);
+  --purple:    #a78bfa;
+  --purple-dim:rgba(167,139,250,0.13);
+  --blue:      #60a5fa;
+  --blue-dim:  rgba(96,165,250,0.13);
+  --pink:      #f472b6;
+  --pink-dim:  rgba(244,114,182,0.13);
+  --gcal-blue: #4285f4;
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --shadow:    0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+/* ─── RESET ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+input, textarea, select, button { font-family: inherit; }
+
+/* ─── SCROLLBAR ──────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+
+/* ─── HEADER ─────────────────────────────── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,26,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: 60px;
+  display: flex; align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--amber));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 12px rgba(240,180,41,0.3);
+}
+.logo-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  color: var(--gold-lt);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.logo-sub {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.header-actions { display: flex; align-items: center; gap: 8px; }
+
+/* ─── NAV TABS ───────────────────────────── */
+.nav-tabs {
+  display: flex;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+  user-select: none;
+}
+.nav-tab .tab-icon { font-size: 15px; }
+.nav-tab:hover { color: var(--text2); }
+.nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── BUTTONS ────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text);
+  transition: all .15s;
+  white-space: nowrap;
+  user-select: none;
+}
+.btn:hover { background: var(--surface3); border-color: rgba(255,255,255,0.16); }
+.btn:active { transform: scale(0.97); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--amber));
+  border-color: transparent;
+  color: #1a1000;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(240,180,41,0.3);
+}
+.btn-gold:hover { opacity: 0.9; background: linear-gradient(135deg, var(--gold-lt), var(--gold)); }
+.btn-gcal {
+  background: var(--gcal-blue);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+}
+.btn-gcal:hover { background: #3367d6; }
+.btn-danger { background: var(--red-dim); color: var(--red); border-color: rgba(224,82,82,0.25); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-xs { padding: 4px 9px; font-size: 11px; }
+.btn-icon { padding: 7px; }
+
+/* ─── MAIN ───────────────────────────────── */
+.main { padding: 20px; max-width: 1000px; margin: 0 auto; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ─── CARDS ──────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text3);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ─── TEXTAREA ───────────────────────────── */
+.paste-area {
+  width: 100%;
+  height: 160px;
+  background: var(--bg2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  resize: vertical;
+  line-height: 1.7;
+  transition: border-color .2s;
+}
+.paste-area:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(240,180,41,0.1); }
+.paste-area::placeholder { color: var(--text3); font-size: 11px; }
+
+/* ─── STATS GRID ─────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: center;
+  transition: border-color .2s;
+}
+.stat-card.alert-card { border-color: rgba(224,82,82,0.3); }
+.stat-num { font-size: 28px; font-weight: 700; color: var(--gold); line-height: 1; }
+.stat-label { font-size: 10px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ─── LIST VIEW ──────────────────────────── */
+.month-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; color: var(--gold);
+  text-transform: uppercase; letter-spacing: .12em;
+  padding: 16px 0 8px;
+  border-bottom: 1px solid rgba(240,180,41,0.12);
+  margin-bottom: 12px;
+}
+.day-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.day-card:hover { border-color: var(--border2); }
+.day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.day-header-left { display: flex; align-items: center; gap: 10px; }
+.day-dot-row { display: flex; gap: 4px; }
+.day-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.day-count { font-size: 11px; color: var(--text3); }
+.day-header-right { display: flex; align-items: center; gap: 6px; }
+
+/* event row */
+.event-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+.ev-time-col { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.ev-time-badge {
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: var(--gold-dim);
+  color: var(--gold-lt);
+  white-space: nowrap;
+}
+.ev-time-badge.serenata { background: var(--purple-dim); color: var(--purple); }
+.ev-until { font-size: 10px; color: var(--text3); padding-left: 2px; }
+.ev-body { display: flex; flex-direction: column; gap: 4px; }
+.ev-grupo-tag {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+  display: inline-block;
+  letter-spacing: .03em;
+}
+.g-palenque  { background: var(--amber-dim);  color: var(--amber);  }
+.g-estrella  { background: var(--purple-dim); color: var(--purple); }
+.g-geminis   { background: var(--green-dim);  color: var(--green);  }
+.g-serenata  { background: var(--pink-dim);   color: var(--pink);   }
+.g-otro      { background: var(--blue-dim);   color: var(--blue);   }
+.ev-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.ev-meta  { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.ev-meta-sep { color: var(--text3); }
+
+/* traslado alert */
+.traslado-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 500;
+}
+.traslado-bar.ok     { background: var(--green-dim); color: var(--green); }
+.traslado-bar.warn   { background: var(--amber-dim); color: var(--amber); }
+.traslado-bar.danger { background: var(--red-dim);   color: var(--red);   }
+
+/* free slots */
+.free-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 9px 16px;
+  border-top: 1px solid var(--border);
+  background: rgba(78,203,141,0.04);
+}
+.free-label { font-size: 10px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .06em; }
+.free-chip {
+  font-size: 10px;
+  background: var(--green-dim);
+  border: 1px solid rgba(78,203,141,0.2);
+  color: var(--green);
+  padding: 2px 9px;
+  border-radius: 99px;
+}
+
+/* ─── CALENDAR ───────────────────────────── */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cal-month-label { font-size: 20px; font-weight: 700; color: var(--text); }
+.cal-year-label  { font-size: 14px; color: var(--text3); margin-left: 6px; font-weight: 400; }
+.cal-weekdays {
+  display: grid; grid-template-columns: repeat(7,1fr);
+  gap: 4px; margin-bottom: 4px;
+}
+.cal-wd {
+  font-size: 10px; font-weight: 600;
+  text-align: center; padding: 6px 0;
+  color: var(--text3); text-transform: uppercase; letter-spacing: .06em;
+}
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 80px;
+  padding: 8px;
+  cursor: default;
+  transition: border-color .15s, background .15s;
+}
+.cal-cell.other-month { opacity: .3; }
+.cal-cell.has-events { border-color: rgba(240,180,41,.25); cursor: pointer; }
+.cal-cell.has-events:hover { border-color: var(--gold); background: var(--gold-dim2); }
+.cal-cell.today .cal-cell-day { background: var(--gold); color: #1a1000; font-weight: 700; }
+.cal-cell-day {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 5px;
+}
+.cal-cell-dots { display: flex; flex-wrap: wrap; gap: 3px; }
+.cal-cdot { width: 6px; height: 6px; border-radius: 50%; }
+.cdot-palenque { background: var(--amber); }
+.cdot-estrella { background: var(--purple); }
+.cdot-geminis  { background: var(--green); }
+.cdot-serenata { background: var(--pink); }
+.cdot-otro     { background: var(--blue); }
+.cal-cell-count { font-size: 9px; color: var(--text3); margin-top: 3px; }
+.cal-cell-preview {
+  font-size: 9px; color: var(--text2);
+  margin-top: 3px; line-height: 1.4;
+  overflow: hidden; max-height: 28px;
+}
+
+/* ─── GCAL SECTION ───────────────────────── */
+.gcal-status-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px; font-weight: 500;
+}
+.gcal-status-bar.disconnected { background: var(--red-dim); color: var(--red); border: 1px solid rgba(224,82,82,.2); }
+.gcal-status-bar.connected    { background: var(--green-dim); color: var(--green); border: 1px solid rgba(78,203,141,.2); }
+.gcal-status-bar.loading      { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,.25); }
+.setup-field { margin-bottom: 14px; }
+.setup-field label { font-size: 11px; font-weight: 600; color: var(--text2); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+.setup-field input {
+  width: 100%; background: var(--bg2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  transition: border-color .2s;
+}
+.setup-field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(240,180,41,.1); }
+.setup-hint { font-size: 10px; color: var(--text3); margin-top: 5px; line-height: 1.5; }
+.step-list { display: flex; flex-direction: column; gap: 12px; }
+.step-item { display: flex; gap: 12px; align-items: flex-start; }
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gold-dim); color: var(--gold);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.step-text strong { color: var(--text); font-weight: 600; }
+.step-code { font-family: monospace; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 11px; color: var(--gold-lt); }
+
+/* ─── DIST EDITOR ────────────────────────── */
+.dist-row {
+  display: grid; grid-template-columns: 1fr 20px 1fr 80px 34px;
+  gap: 8px; align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.dist-row:last-child { border-bottom: none; }
+.dist-zone { font-size: 13px; color: var(--text); }
+.dist-arrow { color: var(--text3); text-align: center; font-size: 12px; }
+.dist-min-input {
+  width: 70px; background: var(--bg2); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 6px 8px; font-size: 12px; text-align: center;
+}
+.dist-min-input:focus { outline: none; border-color: var(--gold); }
+.dist-add-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+.dist-add-row input {
+  background: var(--bg2); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px;
+}
+
+/* ─── MODAL ──────────────────────────────── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 520px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--surface);
+  z-index: 2;
+}
+.modal-head-title { font-size: 15px; font-weight: 700; }
+.modal-close-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface3); border: none;
+  color: var(--text2); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.modal-close-btn:hover { background: var(--surface2); color: var(--text); }
+.modal-content { padding: 16px 20px 20px; }
+
+/* ─── INSTALL BANNER ─────────────────────── */
+.install-banner {
+  display: none;
+  background: var(--gold-dim);
+  border: 1px solid rgba(240,180,41,.25);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  align-items: center; justify-content: space-between;
+  gap: 12px; font-size: 12px; color: var(--text2);
+}
+
+/* ─── TOAST ──────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  font-size: 13px; font-weight: 500;
+  box-shadow: var(--shadow);
+  z-index: 500;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(78,203,141,.3); color: var(--green); }
+.toast.error   { border-color: rgba(224,82,82,.3);   color: var(--red); }
+
+/* ─── EMPTY ──────────────────────────────── */
+.empty-state { padding: 48px 20px; text-align: center; color: var(--text3); }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: .7; }
+.empty-state p { font-size: 14px; color: var(--text3); }
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media (max-width: 640px) {
+  .main { padding: 14px; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .cal-cell { min-height: 60px; padding: 5px; }
+  .cal-cell-preview { display: none; }
+  .logo-name { font-size: 14px; }
+  .header { padding: 0 14px; }
+  .dist-row { grid-template-columns: 1fr 16px 1fr 68px 30px; gap: 5px; font-size: 12px; }
+}
+@media (max-width: 400px) {
+  .cal-cell { min-height: 52px; }
+  .cal-cell-day { width: 20px; height: 20px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <div class="logo-icon">🎺</div>
+    <div>
+      <div class="logo-name">Mariachi Estrella Brillante</div>
+      <div class="logo-sub">Gestión de horarios</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-sm" id="btnVista" onclick="toggleCalendar()">📅 Calendario</button>
+    <button class="btn btn-gcal btn-sm" onclick="showTab('gcal')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 3h-3V1.5h-1.5V3h-6V1.5H7.5V3h-3C3.67 3 3 3.67 3 4.5v15c0 .83.67 1.5 1.5 1.5h15c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zm0 16.5h-15V9h15v10.5zm0-12h-15V4.5h3V6H9V4.5h6V6h1.5V4.5h3V7.5z"/></svg>
+      Google Cal
+    </button>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" id="tab-horarios" onclick="showTab('horarios')">
+    <span class="tab-icon">🎶</span> Horarios
+  </div>
+  <div class="nav-tab" id="tab-calendario" onclick="showTab('calendario')">
+    <span class="tab-icon">📅</span> Calendario
+  </div>
+  <div class="nav-tab" id="tab-distancias" onclick="showTab('distancias')">
+    <span class="tab-icon">🗺</span> Distancias
+  </div>
+  <div class="nav-tab" id="tab-gcal" onclick="showTab('gcal')">
+    <span class="tab-icon">📆</span> Google Cal
+  </div>
+  <div class="nav-tab" id="tab-instalar" onclick="showTab('instalar')">
+    <span class="tab-icon">📲</span> Instalar
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- INSTALL BANNER -->
+  <div class="install-banner" id="installBanner">
+    <span>📲 Instala esta app para usarla sin internet desde tu celular o laptop</span>
+    <button class="btn btn-gold btn-sm" onclick="installApp()">Instalar ahora</button>
+  </div>
+
+  <!-- ── HORARIOS ── -->
+  <div class="section active" id="sec-horarios">
+    <div class="card">
+      <div class="card-title">📋 Pega el mensaje de WhatsApp</div>
+      <textarea class="paste-area" id="inputText" placeholder="Pega aquí — funciona con cualquier formato:
+
+📅 *LUNES 15/06/26*
+1️⃣ *PALENQUE*
+*Evento:* Cumpleaños
+*Lugar* Orcotuna
+*Hora:* 9:00 am
+*Tiempo:* 30 minutos
+*Puntas:* 4 músicos Y 1 osito
+
+Serenata miércoles 17 de junio
+Hora: 4:30 pm
+Tiempo: 20 minutos
+Paquete: 4 musicos
+Lugar: UNCP"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="analizar()">🔍 Analizar horarios</button>
+        <button class="btn" onclick="limpiar()">🗑 Limpiar</button>
+        <button class="btn btn-gcal btn-sm" id="btnExportAll" style="display:none" onclick="exportAllGCal()">
+          📆 Exportar todo a Google Cal
+        </button>
+        <button class="btn btn-sm" id="btnICS" style="display:none" onclick="exportICS()">
+          ⬇ Descargar .ics
+        </button>
+      </div>
+    </div>
+
+    <div id="statsRow" style="display:none">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="st-dias">0</div>
+          <div class="stat-label">Días con eventos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="st-eventos">0</div>
+          <div class="stat-label">Eventos totales</div>
+        </div>
+        <div class="stat-card" id="stat-alertas">
+          <div class="stat-num" id="st-alertas">0</div>
+          <div class="stat-label">Alertas de tiempo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="st-libres">0</div>
+          <div class="stat-label">Huecos libres</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="listContent">
+      <div class="empty-state">
+        <div class="empty-icon">🎺</div>
+        <p>Pega el mensaje de tu hermana arriba para ver los horarios organizados</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALENDARIO ── -->
+  <div class="section" id="sec-calendario">
+    <div class="card">
+      <div class="cal-header">
+        <div>
+          <span class="cal-month-label" id="calMonthLabel">Junio</span>
+          <span class="cal-year-label" id="calYearLabel">2026</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm" onclick="prevCal()">←</button>
+          <button class="btn btn-sm" onclick="todayCal()">Hoy</button>
+          <button class="btn btn-sm" onclick="nextCal()">→</button>
+        </div>
+      </div>
+      <div class="cal-weekdays" id="calWD"></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <!-- Legend -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 4px 4px;font-size:11px;color:var(--text2)">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);margin-right:4px"></span>Palenque</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--purple);margin-right:4px"></span>Estrella</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:4px"></span>Géminis</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pink);margin-right:4px"></span>Serenata</span>
+    </div>
+  </div>
+
+  <!-- ── DISTANCIAS ── -->
+  <div class="section" id="sec-distancias">
+    <div class="card">
+      <div class="card-title">🗺 Tiempos de traslado entre zonas</div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.6">
+        El app usa estos tiempos para alertarte si no hay espacio suficiente entre eventos del mismo día. Base: <strong style="color:var(--gold)">Huancayo</strong>.
+      </p>
+      <div id="distList"></div>
+      <div class="dist-add-row">
+        <input type="text" id="dZ1" placeholder="Origen (ej: Tambo)" style="flex:1;min-width:90px">
+        <span style="color:var(--text3)">→</span>
+        <input type="text" id="dZ2" placeholder="Destino (ej: Chilca)" style="flex:1;min-width:90px">
+        <input type="number" id="dM" placeholder="min" style="width:68px">
+        <button class="btn btn-gold btn-sm" onclick="addDist()">+ Agregar</button>
+      </div>
+    </div>
+    <p style="font-size:10px;color:var(--text3);padding:0 4px">💾 Se guardan automáticamente en tu dispositivo</p>
+  </div>
+
+  <!-- ── GOOGLE CAL ── -->
+  <div class="section" id="sec-gcal">
+    <div id="gcalStatusBar" class="gcal-status-bar disconnected">
+      <span>⚪</span> <span id="gcalStatusText">No conectado a Google Calendar</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 Configuración de Google Calendar API</div>
+      <div class="setup-field">
+        <label>Client ID de Google OAuth 2.0</label>
+        <input type="text" id="gcClientId" placeholder="123456789-abc.apps.googleusercontent.com">
+        <div class="setup-hint">Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs</div>
+      </div>
+      <div class="setup-field">
+        <label>API Key</label>
+        <input type="text" id="gcApiKey" placeholder="AIzaSy...">
+        <div class="setup-hint">Google Cloud Console → APIs & Services → Credentials → API Keys</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="saveGCal()">💾 Guardar</button>
+        <button class="btn btn-gcal" onclick="connectGCal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          Conectar con Google
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="disconnectGCal()" id="btnDisconnect" style="display:none">Desconectar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Cómo obtener las credenciales — paso a paso</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Ve a <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> e inicia sesión con tu cuenta Google</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Crea un proyecto nuevo</strong> — clic en "Select a project" → "New Project" → nombre: <span class="step-code">Mariachi Horarios</span> → Create</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Activa la API de Calendar</strong> — APIs & Services → Library → busca <span class="step-code">Google Calendar API</span> → Enable</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Configura la pantalla de consentimiento OAuth</strong> — APIs & Services → OAuth consent screen → External → rellena nombre de app y tu email → Save</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Crea OAuth 2.0 Client ID</strong> — Credentials → Create Credentials → OAuth Client ID → tipo: <span class="step-code">Web application</span><br>
+          En "Authorized JavaScript origins" agrega: <span class="step-code">http://localhost:5500</span> y <span class="step-code">http://127.0.0.1:5500</span><br>
+          Copia el <strong>Client ID</strong> y pégalo arriba</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Crea una API Key</strong> — Credentials → Create Credentials → API Key → cópiala y pégala arriba</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">7</div>
+          <div class="step-text">Presiona <strong>"Guardar"</strong> y luego <strong>"Conectar con Google"</strong> — aparecerá una ventana de Google para autorizar</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⬇ Exportar sin configuración — archivo .ics</div>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">Si no quieres configurar la API, descarga el archivo .ics e impórtalo en Google Calendar manualmente.</p>
+      <button class="btn btn-sm" onclick="exportICS()">⬇ Descargar mariachi-horarios.ics</button>
+      <div class="setup-hint" style="margin-top:8px">Google Calendar → ⚙ Configuración → Importar y exportar → Importar → selecciona el archivo .ics</div>
+    </div>
+  </div>
+
+  <!-- ── INSTALAR ── -->
+  <div class="section" id="sec-instalar">
+    <div class="card">
+      <div class="card-title">💻 En VS Code (recomendado para laptop)</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Abre VS Code → File → Open Folder → selecciona la carpeta <span class="step-code">mariachi-app</span> que descomprimiste del ZIP</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">Instala la extensión <strong>Live Server</strong> — Extensions (Ctrl+Shift+X) → busca <span class="step-code">Live Server</span> de Ritwick Dey → Install</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">Clic derecho en <span class="step-code">index.html</span> → <strong>"Open with Live Server"</strong> — se abre en Chrome en <span class="step-code">http://localhost:5500</span></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-text">Para instalarla como app: en Chrome, busca el ícono <strong>⊕</strong> en la barra de direcciones → "Instalar Mariachi Estrella Brillante"</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📱 En celular Android</div>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num">1</div><div class="step-text">Comparte el archivo <span class="step-code">index.html</span> a tu celular (WhatsApp, Drive, cable)</div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-text">Ábrelo con Chrome → menú ⋮ → <strong>"Agregar a pantalla de inicio"</strong></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-text">Confirma → se instala como app nativa con ícono propio</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🍎 En iPhone</div>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num">1</div><div class="step-text">Abre el archivo en <strong>Safari</strong> (no Chrome en iOS)</div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-text">Toca el botón compartir □↑ → <strong>"Agregar a pantalla de inicio"</strong> → Agregar</div></div>
+      </div>
+    </div>
+    <div style="background:var(--gold-dim2);border:1px solid rgba(240,180,41,.15);border-radius:var(--radius);padding:14px;font-size:12px;color:var(--text2);line-height:1.7">
+      ✅ Una vez instalada, funciona <strong style="color:var(--text)">sin internet</strong><br>
+      💾 Las distancias y configuración se guardan en tu dispositivo<br>
+      🔄 Para actualizar, reemplaza el archivo <span class="step-code">index.html</span> y recarga
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-title" id="modalTitle"></div>
+      <button class="modal-close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let allDays = {}, dayOrder = [], monthOf = {};
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
+let gcalAuthed = false, gcalReady = false;
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ═══════════════════════════════════════════
+//  DISTANCIAS
+// ═══════════════════════════════════════════
+const DEF = [
+  ['Huancayo','El Tambo',10],['Huancayo','Chilca',15],['Huancayo','Concepción',35],
+  ['Huancayo','Chupaca',20],['Huancayo','Orcotuna',30],['Huancayo','Pilcomayo',25],
+  ['Huancayo','Sicaya',35],['Huancayo','Ingenio',30],['Huancayo','Pucará',25],
+  ['Huancayo','Tambo',10],['Huancayo','Hincho',45],['Huancayo','UNCP',12],
+  ['Huancayo','Junín',45],['El Tambo','Chilca',20],['Chupaca','Concepción',25],
+  ['Chilca','El Tambo',20],['El Tambo','Huancayo',10],
+];
+let dists = [];
+
+function loadDists() {
+  try { dists = JSON.parse(localStorage.getItem('mariachi_dists')) || []; } catch(e) { dists = []; }
+  if (!dists.length) dists = DEF.map(([a,b,m]) => ({from:a, to:b, mins:m}));
+}
+function saveDists() { localStorage.setItem('mariachi_dists', JSON.stringify(dists)); }
+
+function getTT(a, b) {
+  if (!a || !b) return null;
+  a = a.toLowerCase().trim(); b = b.toLowerCase().trim();
+  if (a === b) return 5;
+  for (const d of dists) {
+    const df = d.from.toLowerCase(), dt = d.to.toLowerCase();
+    if ((df===a&&dt===b)||(df===b&&dt===a)) return d.mins;
+    if ((a.includes(df)||df.includes(a))&&(b.includes(dt)||dt.includes(b))) return d.mins;
+    if ((b.includes(df)||df.includes(b))&&(a.includes(dt)||dt.includes(a))) return d.mins;
+  }
+  return null;
+}
+
+function renderDistList() {
+  document.getElementById('distList').innerHTML = dists.map((d,i) => `
+    <div class="dist-row">
+      <span class="dist-zone">${d.from}</span>
+      <span class="dist-arrow">→</span>
+      <span class="dist-zone">${d.to}</span>
+      <div style="display:flex;align-items:center;gap:4px">
+        <input type="number" class="dist-min-input" value="${d.mins}" min="1"
+          onchange="dists[${i}].mins=parseInt(this.value)||5;saveDists()">
+        <span style="font-size:10px;color:var(--text3)">min</span>
+      </div>
+      <button class="btn btn-xs btn-danger" onclick="dists.splice(${i},1);saveDists();renderDistList()">✕</button>
+    </div>`).join('') || '<p style="font-size:12px;color:var(--text3);padding:8px 0">Sin distancias guardadas</p>';
+}
+
+function addDist() {
+  const a = document.getElementById('dZ1').value.trim();
+  const b = document.getElementById('dZ2').value.trim();
+  const m = parseInt(document.getElementById('dM').value) || 15;
+  if (!a || !b) { showToast('Escribe origen y destino', 'error'); return; }
+  dists.push({from:a, to:b, mins:m});
+  saveDists(); renderDistList();
+  document.getElementById('dZ1').value = '';
+  document.getElementById('dZ2').value = '';
+  document.getElementById('dM').value = '';
+  showToast(`${a} → ${b}: ${m} min guardado`);
+}
+
+// ═══════════════════════════════════════════
+//  PARSE
+// ═══════════════════════════════════════════
+function clean(l) {
+  return l.replace(/\*/g,'').replace(/[0-9]\uFE0F?\u20E3/g,'')
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu,'').replace(/[\u2600-\u27BF]/g,'')
+    .replace(/[📅🗓📆]/g,'').replace(/\s+/g,' ').trim();
+}
+const MESES = {enero:1,febrero:2,marzo:3,abril:4,mayo:5,junio:6,julio:7,agosto:8,septiembre:9,octubre:10,noviembre:11,diciembre:12};
+function parseTime(s) {
+  if (!s) return null;
+  s = s.replace(/\s/g,'').toLowerCase();
+  const m = s.match(/(\d+)(?::(\d+))?(am|pm)/i);
+  if (!m) return null;
+  let h = parseInt(m[1]), mn = parseInt(m[2]||'0');
+  if (m[3]==='pm'&&h!==12) h+=12;
+  if (m[3]==='am'&&h===12) h=0;
+  return h*60+mn;
+}
+function parseDur(s) {
+  if (!s) return 60;
+  s = s.toLowerCase();
+  if (s.includes('30 min')||s.includes('media hora')) return 30;
+  const h = s.match(/(\d+)\s*hora/), mn = s.match(/(\d+)\s*min/);
+  return (h?parseInt(h[1])*60:0)+(mn?parseInt(mn[1]):0)||60;
+}
+function m2t(m) {
+  const h=Math.floor(m/60)%24, mn=m%60, ap=h>=12?'pm':'am', hh=h%12||12;
+  return `${hh}:${mn.toString().padStart(2,'0')} ${ap}`;
+}
+const DAY_RE = /^(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|sabado|domingo)\s+(\d{1,2})[\/\-](\d{1,2})[\/\-]?(\d{0,4})/i;
+const MON_RE  = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)$/i;
+const GRP_RE  = /^(\d+\s*)?(palenque|estrella|géminis|geminis|mariachi[\w\s]*)\s*$/i;
+
+function trySerenata(line, yr) {
+  const sl = line.toLowerCase();
+  if (!sl.startsWith('serenata')) return null;
+  let mesNum = null, dayNum = null;
+  for (const [m,n] of Object.entries(MESES)) if (sl.includes(m)) { mesNum=n; break; }
+  const nm = sl.match(/\b(\d{1,2})\b/);
+  if (nm) dayNum = parseInt(nm[1]);
+  if (!dayNum || !mesNum) return null;
+  const dObj = new Date(yr, mesNum-1, dayNum);
+  const ds = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][dObj.getDay()];
+  const key = `${ds} ${dayNum}/${String(mesNum).padStart(2,'0')}/${String(yr).slice(2)}`;
+  return { key, dateObj: dObj };
+}
+
+function parseMensaje(text) {
+  const days={}, order=[], monthOf={};
+  let curDay=null, curEv=null, curMonth='Junio', curYear=new Date().getFullYear();
+  for (const raw of text.split('\n')) {
+    const line = clean(raw);
+    if (!line) continue;
+    if (MON_RE.test(line)) { curMonth=line.charAt(0).toUpperCase()+line.slice(1).toLowerCase(); continue; }
+    // serenata?
+    const sr = trySerenata(line, curYear);
+    if (sr) {
+      curDay = sr.key; monthOf[curDay]=curMonth;
+      if (!days[curDay]) { days[curDay]=[]; order.push(curDay); }
+      days[curDay]._date = sr.dateObj;
+      curEv = {grupo:'Serenata',evento:'Serenata',lugar:'',hora:'',tiempo:'',puntas:'',startMin:null,dur:20,isSerenata:true};
+      days[curDay].push(curEv); continue;
+    }
+    // day header?
+    const dm = line.match(DAY_RE);
+    if (dm) {
+      const yr = dm[4] ? (dm[4].length===2?'20'+dm[4]:dm[4]) : String(curYear);
+      const mo=parseInt(dm[3]), dy=parseInt(dm[2]);
+      const dObj = new Date(parseInt(yr),mo-1,dy);
+      curDay=line; monthOf[curDay]=curMonth;
+      if (!days[curDay]) { days[curDay]=[]; order.push(curDay); }
+      days[curDay]._date=dObj; curEv=null; continue;
+    }
+    if (!curDay) continue;
+    // group?
+    const gm = line.match(GRP_RE);
+    if (gm && !curEv?.isSerenata) {
+      curEv={grupo:line.replace(/^\d+\s*/,'').trim(),evento:'',lugar:'',hora:'',tiempo:'',puntas:'',startMin:null,dur:60,isSerenata:false};
+      days[curDay].push(curEv); continue;
+    }
+    const ll=line.toLowerCase();
+    if (!curEv && /^(evento|lugar|hora|tiempo|puntas|paquete)[\s:]/.test(ll)) {
+      curEv={grupo:'',evento:'',lugar:'',hora:'',tiempo:'',puntas:'',startMin:null,dur:60,isSerenata:false};
+      days[curDay].push(curEv);
+    }
+    if (!curEv) continue;
+    if (ll.startsWith('evento'))  curEv.evento=line.replace(/^evento[:\s]*/i,'').trim();
+    else if (ll.startsWith('lugar'))   curEv.lugar=line.replace(/^lugar[:\s]*/i,'').trim();
+    else if (ll.startsWith('hora'))  { curEv.hora=line.replace(/^hora[:\s]*/i,'').trim(); curEv.startMin=parseTime(curEv.hora); }
+    else if (ll.startsWith('tiempo')){ curEv.tiempo=line.replace(/^tiempo[:\s]*/i,'').trim(); curEv.dur=parseDur(curEv.tiempo); }
+    else if (ll.startsWith('puntas')) curEv.puntas=line.replace(/^puntas[:\s]*/i,'').trim();
+    else if (ll.startsWith('paquete')){ curEv.paquete=line.replace(/^paquete[:\s]*/i,'').trim(); if(!curEv.puntas) curEv.puntas=curEv.paquete; }
+  }
+  return { days, order, monthOf };
+}
+
+// ═══════════════════════════════════════════
+//  FREE SLOTS & TRASLADO
+// ═══════════════════════════════════════════
+function freeSlots(evs) {
+  const S=8*60, E=23*60;
+  const s=[...evs].filter(e=>e.startMin!==null).sort((a,b)=>a.startMin-b.startMin);
+  const out=[]; let cur=S;
+  for (const ev of s) { if(ev.startMin>cur+29) out.push(`${m2t(cur)} – ${m2t(ev.startMin)}`); cur=Math.max(cur,ev.startMin+ev.dur); }
+  if (cur<E-29) out.push(`${m2t(cur)} – ${m2t(E)}`);
+  return out;
+}
+function traslado(a,b) {
+  if (!a||!b||a.startMin===null||b.startMin===null) return null;
+  const endA=a.startMin+a.dur, gap=b.startMin-endA, travel=getTT(a.lugar,b.lugar)||0, needed=travel+10;
+  return {gap, travel, needed, ok:gap>=needed};
+}
+
+// ═══════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════
+function gClass(g) {
+  const gl=(g||'').toLowerCase();
+  if(gl.includes('palenque')) return 'g-palenque';
+  if(gl.includes('estrella')) return 'g-estrella';
+  if(gl.includes('géminis')||gl.includes('geminis')) return 'g-geminis';
+  if(gl.includes('serenata')) return 'g-serenata';
+  return 'g-otro';
+}
+function dotClass(g) {
+  const cl = gClass(g);
+  return cl.replace('g-','cdot-');
+}
+
+function renderEventItem(ev, t=null) {
+  const end = ev.startMin!==null ? ev.startMin+ev.dur : null;
+  let html = `<div class="event-item">
+    <div class="ev-time-col">
+      <span class="ev-time-badge ${ev.isSerenata?'serenata':''}">${ev.isSerenata?'🎵':'🎶'} ${ev.hora||'—'}</span>
+      ${end?`<span class="ev-until">hasta ${m2t(end)}</span>`:''}
+    </div>
+    <div class="ev-body">
+      ${ev.grupo?`<span class="ev-grupo-tag ${gClass(ev.grupo)}">${ev.grupo}</span>`:''}
+      <div class="ev-title">${ev.evento||'Evento'}</div>
+      <div class="ev-meta">
+        ${ev.lugar?`<span>📍 ${ev.lugar}</span>`:''}
+        ${ev.lugar&&(ev.puntas||ev.tiempo)?`<span class="ev-meta-sep">·</span>`:''}
+        ${ev.puntas?`<span>👥 ${ev.puntas}</span>`:''}
+        ${(ev.puntas||ev.lugar)&&ev.tiempo?`<span class="ev-meta-sep">·</span>`:''}
+        ${ev.tiempo?`<span>⏱ ${ev.tiempo}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+  if (t) {
+    const cls = t.ok?'ok':(t.gap>=0?'warn':'danger');
+    const icon = t.ok?'✅':(t.gap>=0?'⚠️':'🚨');
+    const msg = t.ok ? `${icon} Traslado OK — ${t.travel} min de viaje, tienes ${t.gap} min disponibles`
+      : (t.gap<0 ? `${icon} ¡CHOQUE DE HORARIOS! Se superponen ${Math.abs(t.gap)} min`
+      : `${icon} Tiempo muy justo — necesitas ${t.needed} min, solo tienes ${t.gap} min`);
+    html += `<div class="traslado-bar ${cls}">${msg}</div>`;
+  }
+  return html;
+}
+
+// ═══════════════════════════════════════════
+//  LIST VIEW
+// ═══════════════════════════════════════════
+function renderList(filterDay=null) {
+  const order = filterDay ? [filterDay] : dayOrder;
+  if (!order.length) return '<div class="empty-state"><div class="empty-icon">🎺</div><p>Pega el mensaje de tu hermana para ver los horarios</p></div>';
+  let html='', lastM=null, totalLibres=0, totalAlertas=0;
+  for (const day of order) {
+    const evs = allDays[day]||[];
+    const m = monthOf[day]||'';
+    if (!filterDay && m!==lastM) { html+=`<div class="month-label">🎵 ${m}</div>`; lastM=m; }
+    const sorted = [...evs].sort((a,b)=>(a.startMin||9999)-(b.startMin||9999));
+    const free = freeSlots(evs);
+    totalLibres += free.length;
+    const dots = evs.map(e=>`<div class="cal-cdot ${dotClass(e.grupo)}" style="width:7px;height:7px"></div>`).join('');
+    html += `<div class="day-card">
+      <div class="day-header">
+        <div class="day-header-left">
+          <div class="day-dot-row">${dots}</div>
+          <div class="day-name">📅 ${day}</div>
+          <div class="day-count">${evs.length} evento${evs.length!==1?'s':''}</div>
+        </div>
+        <div class="day-header-right">
+          <button class="btn btn-gcal btn-xs" onclick="exportDayGCal('${day}')" title="Exportar a Google Cal">📆</button>
+          <button class="btn btn-xs" onclick="exportDayICS('${day}')" title="Descargar .ics">⬇</button>
+        </div>
+      </div>`;
+    for (let i=0; i<sorted.length; i++) {
+      const t = i<sorted.length-1 ? traslado(sorted[i],sorted[i+1]) : null;
+      if (t && !t.ok) totalAlertas++;
+      html += renderEventItem(sorted[i], t);
+    }
+    if (free.length) html += `<div class="free-bar"><span class="free-label">🟢 Libre:</span>${free.map(s=>`<span class="free-chip">${s}</span>`).join('')}</div>`;
+    html += `</div>`;
+  }
+  if (!filterDay) {
+    document.getElementById('st-alertas').textContent = totalAlertas;
+    document.getElementById('st-libres').textContent = totalLibres;
+    document.getElementById('stat-alertas').classList.toggle('alert-card', totalAlertas>0);
+  }
+  return html;
+}
+
+// ═══════════════════════════════════════════
+//  CALENDAR VIEW
+// ═══════════════════════════════════════════
+const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS_ES  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+function buildDateMap() {
+  const m={};
+  for (const day of dayOrder) {
+    const d = allDays[day]._date;
+    if (!d) continue;
+    m[`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`] = {day, evs:allDays[day]};
+  }
+  return m;
+}
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent = MESES_ES[calMonth];
+  document.getElementById('calYearLabel').textContent = calYear;
+  document.getElementById('calWD').innerHTML = DIAS_ES.map(d=>`<div class="cal-wd">${d}</div>`).join('');
+  const today=new Date(), bdm=buildDateMap();
+  const first=new Date(calYear,calMonth,1);
+  const startDow=first.getDay(), dim=new Date(calYear,calMonth+1,0).getDate(), dip=new Date(calYear,calMonth,0).getDate();
+  const cells = Math.ceil((startDow+dim)/7)*7;
+  let html='';
+  for (let i=0; i<cells; i++) {
+    let d,mo=calMonth,yr=calYear,other=false;
+    if(i<startDow){d=dip-(startDow-1-i);mo=calMonth-1;if(mo<0){mo=11;yr--;}other=true;}
+    else if(i-startDow>=dim){d=i-startDow-dim+1;mo=calMonth+1;if(mo>11){mo=0;yr++;}other=true;}
+    else d=i-startDow+1;
+    const isToday=d===today.getDate()&&mo===today.getMonth()&&yr===today.getFullYear();
+    const k=`${yr}-${mo}-${d}`;
+    const data=bdm[k];
+    const hasEv=!!data;
+    html += `<div class="cal-cell${hasEv?' has-events':''}${isToday?' today':''}${other?' other-month':''}"
+      ${hasEv?`onclick="openModal('${data.day}')"`:''}">
+      <div class="cal-cell-day">${d}</div>
+      ${hasEv?`<div class="cal-cell-dots">${data.evs.map(e=>`<div class="cal-cdot ${dotClass(e.grupo)}"></div>`).join('')}</div>
+      <div class="cal-cell-count">${data.evs.length} ev.</div>
+      <div class="cal-cell-preview">${data.evs.slice(0,2).map(e=>e.hora?e.hora+' '+( e.grupo||e.evento||''):e.evento||'').join(' · ')}</div>` : ''}
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function prevCal() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function nextCal() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+function todayCal() { calYear=new Date().getFullYear(); calMonth=new Date().getMonth(); renderCalendar(); }
+
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function openModal(day) {
+  document.getElementById('modalTitle').textContent = `📅 ${day}`;
+  document.getElementById('modalContent').innerHTML = renderList(day);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+// ═══════════════════════════════════════════
+//  ANALIZAR
+// ═══════════════════════════════════════════
+function analizar() {
+  const raw = document.getElementById('inputText').value;
+  if (!raw.trim()) { showToast('Pega el mensaje primero', 'error'); return; }
+  const r = parseMensaje(raw);
+  allDays=r.days; dayOrder=r.order; monthOf=r.monthOf;
+  const totalEvs = dayOrder.reduce((a,d)=>a+allDays[d].length,0);
+  document.getElementById('st-dias').textContent = dayOrder.length;
+  document.getElementById('st-eventos').textContent = totalEvs;
+  document.getElementById('statsRow').style.display='block';
+  document.getElementById('btnExportAll').style.display = gcalAuthed ? 'inline-flex' : 'none';
+  document.getElementById('btnICS').style.display = 'inline-flex';
+  document.getElementById('listContent').innerHTML = renderList();
+  renderCalendar();
+  showToast(`✅ ${dayOrder.length} días y ${totalEvs} eventos encontrados`);
+}
+function limpiar() {
+  document.getElementById('inputText').value='';
+  allDays={}; dayOrder=[]; monthOf={};
+  document.getElementById('statsRow').style.display='none';
+  document.getElementById('btnExportAll').style.display='none';
+  document.getElementById('btnICS').style.display='none';
+  document.getElementById('listContent').innerHTML='<div class="empty-state"><div class="empty-icon">🎺</div><p>Pega el mensaje de tu hermana para ver los horarios</p></div>';
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='calendario') renderCalendar();
+  if (name==='distancias') renderDistList();
+  if (name==='gcal') loadGCalConfig();
+}
+function toggleCalendar() {
+  const inCal = document.getElementById('sec-calendario').classList.contains('active');
+  if (inCal) showTab('horarios');
+  else showTab('calendario');
+}
+
+// ═══════════════════════════════════════════
+//  ICS EXPORT
+// ═══════════════════════════════════════════
+function toICSDate(dateObj, mins) {
+  if (!dateObj) return null;
+  const d=new Date(dateObj);
+  d.setHours(Math.floor(mins/60), mins%60, 0, 0);
+  const p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}T${p(d.getHours())}${p(d.getMinutes())}00`;
+}
+function buildICS(days) {
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Mariachi Estrella Brillante//ES\r\nCALSCALE:GREGORIAN\r\n';
+  for (const day of days) {
+    const dObj=allDays[day]._date;
+    for (const ev of allDays[day]) {
+      if (!ev.startMin||!dObj) continue;
+      const s=toICSDate(dObj,ev.startMin), e=toICSDate(dObj,ev.startMin+ev.dur);
+      if(!s)continue;
+      ics+=`BEGIN:VEVENT\r\nDTSTART:${s}\r\nDTEND:${e}\r\nSUMMARY:🎺 ${ev.grupo||'Mariachi'}: ${ev.evento||'Evento'}\r\nLOCATION:${ev.lugar||''}\r\nDESCRIPTION:Puntas: ${ev.puntas||''} | Tiempo: ${ev.tiempo||''}\r\nEND:VEVENT\r\n`;
+    }
+  }
+  return ics+'END:VCALENDAR';
+}
+function downloadICS(content, filename) {
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:'text/calendar'}));
+  a.download=filename; a.click();
+}
+function exportICS() {
+  if (!dayOrder.length) { showToast('Analiza el mensaje primero', 'error'); return; }
+  downloadICS(buildICS(dayOrder), 'mariachi-horarios.ics');
+  showToast('⬇ Archivo .ics descargado');
+}
+function exportDayICS(day) {
+  downloadICS(buildICS([day]), `mariachi-${day}.ics`);
+  showToast(`⬇ ${day} exportado como .ics`);
+}
+
+// ═══════════════════════════════════════════
+//  GOOGLE CALENDAR API
+// ═══════════════════════════════════════════
+function loadGCalConfig() {
+  const c=JSON.parse(localStorage.getItem('mariachi_gcal')||'{}');
+  if(c.clientId) document.getElementById('gcClientId').value=c.clientId;
+  if(c.apiKey)   document.getElementById('gcApiKey').value=c.apiKey;
+  updateGCalStatus();
+}
+function saveGCal() {
+  const cfg={clientId:document.getElementById('gcClientId').value.trim(), apiKey:document.getElementById('gcApiKey').value.trim()};
+  if(!cfg.clientId||!cfg.apiKey){showToast('Completa Client ID y API Key','error');return;}
+  localStorage.setItem('mariachi_gcal',JSON.stringify(cfg));
+  showToast('✅ Configuración guardada');
+}
+function updateGCalStatus() {
+  const bar=document.getElementById('gcalStatusBar'), txt=document.getElementById('gcalStatusText');
+  const btn=document.getElementById('btnDisconnect');
+  if (gcalAuthed) {
+    bar.className='gcal-status-bar connected'; txt.textContent='✅ Conectado a Google Calendar — listo para exportar';
+    btn.style.display='inline-flex';
+  } else {
+    bar.className='gcal-status-bar disconnected'; txt.textContent='⚪ No conectado a Google Calendar';
+    btn.style.display='none';
+  }
+}
+function connectGCal() {
+  const cfg=JSON.parse(localStorage.getItem('mariachi_gcal')||'{}');
+  if(!cfg.clientId||!cfg.apiKey){showToast('Guarda Client ID y API Key primero','error');return;}
+  const bar=document.getElementById('gcalStatusBar'), txt=document.getElementById('gcalStatusText');
+  bar.className='gcal-status-bar loading'; txt.textContent='⏳ Conectando con Google...';
+  if (typeof gapi==='undefined') {
+    const s=document.createElement('script');
+    s.src='https://apis.google.com/js/api.js';
+    s.onload=()=>initGAPI(cfg);
+    s.onerror=()=>{bar.className='gcal-status-bar disconnected';txt.textContent='❌ Error cargando Google API';};
+    document.head.appendChild(s);
+  } else { initGAPI(cfg); }
+}
+function initGAPI(cfg) {
+  gapi.load('client:auth2', () => {
+    gapi.client.init({
+      apiKey: cfg.apiKey,
+      clientId: cfg.clientId,
+      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+      scope: 'https://www.googleapis.com/auth/calendar.events'
+    }).then(() => {
+      gcalReady=true;
+      const auth=gapi.auth2.getAuthInstance();
+      if (auth.isSignedIn.get()) {
+        gcalAuthed=true; updateGCalStatus();
+        if(dayOrder.length) document.getElementById('btnExportAll').style.display='inline-flex';
+      } else {
+        auth.signIn().then(() => {
+          gcalAuthed=true; updateGCalStatus();
+          if(dayOrder.length) document.getElementById('btnExportAll').style.display='inline-flex';
+          showToast('✅ Conectado a Google Calendar');
+        }).catch(e => {
+          document.getElementById('gcalStatusBar').className='gcal-status-bar disconnected';
+          document.getElementById('gcalStatusText').textContent='❌ Autorización rechazada';
+        });
+      }
+    }).catch(e=>{
+      document.getElementById('gcalStatusBar').className='gcal-status-bar disconnected';
+      document.getElementById('gcalStatusText').textContent='❌ Error: '+e.error;
+    });
+  });
+}
+function disconnectGCal() {
+  if(gcalReady&&gapi.auth2) gapi.auth2.getAuthInstance().signOut();
+  gcalAuthed=false; updateGCalStatus();
+  document.getElementById('btnExportAll').style.display='none';
+  showToast('Desconectado de Google Calendar');
+}
+
+async function pushEventsToGCal(days) {
+  if (!gcalAuthed) { showToast('Primero conéctate a Google Calendar','error'); return 0; }
+  let ok=0, fail=0;
+  for (const day of days) {
+    const dObj=allDays[day]._date;
+    for (const ev of allDays[day]) {
+      if (!ev.startMin||!dObj) continue;
+      const sdt=new Date(dObj); sdt.setHours(Math.floor(ev.startMin/60),ev.startMin%60,0,0);
+      const edt=new Date(sdt); edt.setMinutes(edt.getMinutes()+ev.dur);
+      try {
+        await gapi.client.calendar.events.insert({calendarId:'primary', resource:{
+          summary:`🎺 ${ev.grupo||'Mariachi'}: ${ev.evento||'Evento'}`,
+          location:ev.lugar||'',
+          description:`Grupo: ${ev.grupo||''}\nPuntas: ${ev.puntas||''}\nTiempo: ${ev.tiempo||''}`,
+          start:{dateTime:sdt.toISOString()}, end:{dateTime:edt.toISOString()}
+        }});
+        ok++;
+      } catch(e) { fail++; }
+    }
+  }
+  return {ok, fail};
+}
+
+async function exportAllGCal() {
+  if (!gcalAuthed) { showToast('Conéctate a Google Calendar primero','error'); return; }
+  showToast('⏳ Exportando eventos...');
+  const r=await pushEventsToGCal(dayOrder);
+  showToast(r.fail ? `✅ ${r.ok} exportados, ${r.fail} fallaron` : `✅ ${r.ok} eventos exportados a Google Calendar`);
+}
+async function exportDayGCal(day) {
+  if (!gcalAuthed) { exportDayICS(day); return; }
+  const r=await pushEventsToGCal([day]);
+  showToast(`✅ ${r.ok} evento(s) de ${day} exportados`);
+}
+
+// ═══════════════════════════════════════════
+//  PWA
+// ═══════════════════════════════════════════
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('installBanner').style.display='flex';
+});
+function installApp() {
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';showToast('✅ App instalada');});}
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+loadDists();
+renderCalendar();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
+HTMLEOF
+echo "ok"
