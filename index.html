@@ -373,14 +373,110 @@ input,textarea,select,button{font-family:inherit}
 .legend{display:flex;flex-wrap:wrap;gap:12px;padding:0 4px 4px;font-size:11px;color:var(--text2)}
 .legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
 
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE MÓVIL ── */
 @media(max-width:640px){
-  .main{padding:14px}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .cal-cell{min-height:58px;padding:4px}
+
+  /* header */
+  .header{height:56px;padding:0 12px}
+  .logo-name{font-size:14px}
+  .logo-sub{display:none}
+  .header-actions .btn-sm{padding:5px 9px;font-size:11px}
+  /* ocultar botones de header en móvil para ahorrar espacio */
+  .header-actions{gap:5px}
+
+  /* tabs: más compactas */
+  .nav-tabs{padding:0 6px}
+  .nav-tab{padding:11px 10px;font-size:11px;gap:4px}
+
+  /* main */
+  .main{padding:12px 10px}
+
+  /* hero card */
+  .hero-card{padding:16px;border-radius:16px}
+  .hero-title{font-size:13px}
+  .hero-subtitle{font-size:11px;margin-bottom:14px}
+  .paste-area{height:130px;font-size:11px;padding:10px 12px}
+  .btn-row-wrap{flex-direction:column}
+
+  /* botones en columna en móvil */
+  .hero-card > div[style]{flex-direction:column!important;gap:8px!important}
+  .btn-aurora{width:100%;justify-content:center;padding:11px 16px;font-size:13px}
+  .btn-sm{font-size:11px}
+
+  /* stats */
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+  .stat-card{padding:12px 10px}
+  .stat-n{font-size:22px}
+  .stat-l{font-size:9px}
+
+  /* list */
+  .month-label{font-size:15px;padding:12px 0 6px}
+  .day-card{border-radius:14px;margin-bottom:10px}
+  .day-header{padding:10px 12px}
+  .day-name{font-size:12px}
+  .event-item{grid-template-columns:80px 1fr;gap:8px;padding:11px 12px}
+  .ev-badge{font-size:9px;padding:3px 7px}
+  .ev-until{font-size:9px}
+  .ev-title{font-size:12px}
+  .ev-meta{font-size:10px;gap:4px}
+  .ev-tag{font-size:9px;padding:1px 6px}
+  .traslado-bar{padding:8px 12px;font-size:10px}
+  .free-bar{padding:7px 12px;gap:5px}
+  .free-chip{font-size:9px;padding:2px 6px}
+  .free-label{font-size:9px}
+  .day-header-right{gap:4px}
+  .btn-xs{padding:4px 7px;font-size:10px}
+
+  /* calendar */
+  .card{padding:14px;border-radius:14px}
+  .cal-month-name{font-size:18px}
+  .cal-header{margin-bottom:12px}
+  .cal-cell{min-height:52px;padding:4px 3px;border-radius:8px}
   .cal-prev{display:none}
-  .logo-name{font-size:15px}
+  .cal-dn{width:20px;height:20px;font-size:11px}
+  .cal-dot{width:5px;height:5px}
+  .cal-cnt{font-size:8px}
+
+  /* distancias */
   .dist-row{grid-template-columns:1fr 14px 1fr 62px 28px;gap:5px;font-size:11px}
+  .dist-zone{font-size:11px}
+  .dist-add{flex-direction:column;gap:8px}
+  .dist-add input{width:100%}
+
+  /* modal */
+  .modal-box{border-radius:20px 20px 0 0;max-height:92vh;margin-top:auto}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .modal-head{padding:14px 16px 12px}
+  .modal-content{padding:14px 16px 24px}
+
+  /* profile */
+  .profile-upload-area{padding:18px}
+
+  /* gcal */
+  .gcal-bar{font-size:12px;padding:10px 12px}
+  .setup-field input{font-size:12px;padding:9px 12px}
+
+  /* step list */
+  .step-text{font-size:11px}
+  .step-code{font-size:10px}
+
+  /* install banner */
+  .install-banner{flex-direction:column;text-align:center;gap:8px}
+
+  /* aurora reducida en móvil para performance */
+  .a1{width:300px;height:200px}
+  .a2{width:280px;height:220px}
+  .a3{width:240px;height:180px}
+  .a4{width:200px;height:200px}
+}
+
+/* pantallas muy pequeñas */
+@media(max-width:380px){
+  .nav-tab{padding:10px 8px;font-size:10px}
+  .logo-name{font-size:13px}
+  .cal-cell{min-height:44px}
+  .event-item{grid-template-columns:72px 1fr;gap:6px;padding:9px 10px}
+  .header-actions .btn-gcal{display:none} /* ocultar Google Cal del header en pantallas muy chicas */
 }
 </style>
 </head>
