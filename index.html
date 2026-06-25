@@ -1202,7 +1202,7 @@ async function connectGCal(){
         showToast('✅ Conectado a Google Calendar');
       }
     });
-    tokenClient.requestToken();
+    tokenClient.requestAccessToken();
   } catch(e){
     document.getElementById('gcalBar').className='gcal-bar off';
     document.getElementById('gcalBarText').textContent='❌ Error: '+(e.message||e);
