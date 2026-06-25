@@ -1139,7 +1139,9 @@ function downloadICS(content,filename){const a=document.createElement('a');a.hre
 function exportICS(){if(!dayOrder.length){showToast('Analiza primero','error');return;}downloadICS(buildICS(dayOrder),'mariachi-horarios.ics');showToast('⬇ .ics descargado');}
 function exportDayICS(day){downloadICS(buildICS([day]),`mariachi-${day}.ics`);showToast(`⬇ ${day} exportado`);}
 
-// ═══ GOOGLE CALENDAR ═══
+// ═══ GOOGLE CALENDAR — Google Identity Services (nueva librería) ═══
+let gisToken = null;
+
 function loadGCalConfig(){
   const c=JSON.parse(localStorage.getItem('mariachi_gcal')||'{}');
   if(c.clientId)document.getElementById('gcClientId').value=c.clientId;
@@ -1149,52 +1151,111 @@ function loadGCalConfig(){
 function saveGCal(){
   const cfg={clientId:document.getElementById('gcClientId').value.trim(),apiKey:document.getElementById('gcApiKey').value.trim()};
   if(!cfg.clientId||!cfg.apiKey){showToast('Completa Client ID y API Key','error');return;}
-  localStorage.setItem('mariachi_gcal',JSON.stringify(cfg));showToast('✅ Configuración guardada');
+  localStorage.setItem('mariachi_gcal',JSON.stringify(cfg));
+  showToast('✅ Configuración guardada');
 }
 function updateGCalBar(){
   const bar=document.getElementById('gcalBar'),txt=document.getElementById('gcalBarText'),btn=document.getElementById('btnDisconnect');
-  if(gcalAuthed){bar.className='gcal-bar on';txt.textContent='✅ Conectado — listo para exportar';btn.style.display='inline-flex';}
+  if(gcalAuthed){bar.className='gcal-bar on';txt.textContent='✅ Conectado a Google Calendar — listo para exportar';btn.style.display='inline-flex';}
   else{bar.className='gcal-bar off';txt.textContent='⚪ No conectado a Google Calendar';btn.style.display='none';}
 }
-function connectGCal(){
-  const cfg=JSON.parse(localStorage.getItem('mariachi_gcal')||'{}');
-  if(!cfg.clientId||!cfg.apiKey){showToast('Guarda las credenciales primero','error');return;}
-  document.getElementById('gcalBar').className='gcal-bar loading';document.getElementById('gcalBarText').textContent='⏳ Conectando...';
-  if(typeof gapi==='undefined'){
-    const s=document.createElement('script');s.src='https://apis.google.com/js/api.js';
-    s.onload=()=>initGAPI(cfg);s.onerror=()=>{document.getElementById('gcalBar').className='gcal-bar off';document.getElementById('gcalBarText').textContent='❌ Error cargando Google API';};
-    document.head.appendChild(s);
-  }else{initGAPI(cfg);}
-}
-function initGAPI(cfg){
-  gapi.load('client:auth2',()=>{
-    gapi.client.init({apiKey:cfg.apiKey,clientId:cfg.clientId,discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],scope:'https://www.googleapis.com/auth/calendar.events'})
-    .then(()=>{
-      gcalReady=true;const auth=gapi.auth2.getAuthInstance();
-      if(auth.isSignedIn.get()){gcalAuthed=true;updateGCalBar();if(dayOrder.length)document.getElementById('btnExportAll').style.display='inline-flex';}
-      else{auth.signIn().then(()=>{gcalAuthed=true;updateGCalBar();if(dayOrder.length)document.getElementById('btnExportAll').style.display='inline-flex';showToast('✅ Conectado a Google Calendar');})
-        .catch(()=>{document.getElementById('gcalBar').className='gcal-bar off';document.getElementById('gcalBarText').textContent='❌ Autorización rechazada';});}
-    }).catch(e=>{document.getElementById('gcalBar').className='gcal-bar off';document.getElementById('gcalBarText').textContent='❌ Error: '+(e.error||e.message);});
+
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    if(document.querySelector(`script[src="${src}"]`)){res();return;}
+    const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);
   });
 }
-function disconnectGCal(){
-  if(gcalReady&&gapi.auth2)gapi.auth2.getAuthInstance().signOut();
-  gcalAuthed=false;updateGCalBar();document.getElementById('btnExportAll').style.display='none';showToast('Desconectado');
+
+async function connectGCal(){
+  const cfg=JSON.parse(localStorage.getItem('mariachi_gcal')||'{}');
+  if(!cfg.clientId||!cfg.apiKey){showToast('Guarda las credenciales primero','error');return;}
+  document.getElementById('gcalBar').className='gcal-bar loading';
+  document.getElementById('gcalBarText').textContent='⏳ Cargando Google API...';
+  try{
+    // Cargar ambas librerías en paralelo
+    await Promise.all([
+      loadScript('https://apis.google.com/js/api.js'),
+      loadScript('https://accounts.google.com/gsi/client')
+    ]);
+    // Inicializar gapi client
+    await new Promise(res=>gapi.load('client',res));
+    await gapi.client.init({
+      apiKey: cfg.apiKey,
+      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']
+    });
+    gcalReady = true;
+    // Pedir token con GIS (nuevo sistema)
+    const tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: cfg.clientId,
+      scope: 'https://www.googleapis.com/auth/calendar.events',
+      callback: (resp) => {
+        if(resp.error){
+          document.getElementById('gcalBar').className='gcal-bar off';
+          document.getElementById('gcalBarText').textContent='❌ Autorización rechazada: '+resp.error;
+          return;
+        }
+        gisToken = resp.access_token;
+        gcalAuthed = true;
+        updateGCalBar();
+        if(dayOrder.length) document.getElementById('btnExportAll').style.display='inline-flex';
+        showToast('✅ Conectado a Google Calendar');
+      }
+    });
+    tokenClient.requestToken();
+  } catch(e){
+    document.getElementById('gcalBar').className='gcal-bar off';
+    document.getElementById('gcalBarText').textContent='❌ Error: '+(e.message||e);
+    console.error(e);
+  }
 }
+
+function disconnectGCal(){
+  if(gisToken) google.accounts.oauth2.revoke(gisToken);
+  gisToken=null; gcalAuthed=false; gcalReady=false;
+  updateGCalBar();
+  document.getElementById('btnExportAll').style.display='none';
+  showToast('Desconectado de Google Calendar');
+}
+
 async function pushToGCal(days){
-  if(!gcalAuthed){showToast('Conéctate primero','error');return{ok:0,fail:0};}
+  if(!gcalAuthed||!gisToken){showToast('Conéctate primero','error');return{ok:0,fail:0};}
   let ok=0,fail=0;
-  for(const day of days){const dObj=allDays[day]._date;
-    for(const ev of allDays[day]){if(!ev.startMin||!dObj)continue;
+  for(const day of days){
+    const dObj=allDays[day]._date;
+    for(const ev of allDays[day]){
+      if(!ev.startMin||!dObj)continue;
       const sdt=new Date(dObj);sdt.setHours(Math.floor(ev.startMin/60),ev.startMin%60,0,0);
       const edt=new Date(sdt);edt.setMinutes(edt.getMinutes()+ev.dur);
-      try{await gapi.client.calendar.events.insert({calendarId:'primary',resource:{summary:`🎺 ${ev.grupo||'Mariachi'}: ${ev.evento||'Evento'}`,location:ev.lugar||'',description:`Grupo: ${ev.grupo||''}\nPuntas: ${ev.puntas||''}\nTiempo: ${ev.tiempo||''}`,start:{dateTime:sdt.toISOString()},end:{dateTime:edt.toISOString()}}});ok++;}
-      catch(e){fail++;}
-    }}
+      try{
+        await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events`,{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+gisToken,'Content-Type':'application/json'},
+          body:JSON.stringify({
+            summary:`🎺 ${ev.grupo||'Mariachi'}: ${ev.evento||'Evento'}`,
+            location:ev.lugar||'',
+            description:`Grupo: ${ev.grupo||''}\nPuntas: ${ev.puntas||''}\nTiempo: ${ev.tiempo||''}`,
+            start:{dateTime:sdt.toISOString()},
+            end:{dateTime:edt.toISOString()}
+          })
+        });
+        ok++;
+      }catch(e){fail++;console.error(e);}
+    }
+  }
   return{ok,fail};
 }
-async function exportAllGCal(){const r=await pushToGCal(dayOrder);showToast(r.fail?`✅ ${r.ok} exportados, ${r.fail} fallaron`:`✅ ${r.ok} eventos a Google Calendar`);}
-async function exportDayGCal(day){if(!gcalAuthed){exportDayICS(day);return;}const r=await pushToGCal([day]);showToast(`✅ ${r.ok} evento(s) exportados`);}
+async function exportAllGCal(){
+  if(!gcalAuthed){showToast('Conéctate a Google Calendar primero','error');return;}
+  showToast('⏳ Exportando...');
+  const r=await pushToGCal(dayOrder);
+  showToast(r.fail?`✅ ${r.ok} exportados, ${r.fail} fallaron`:`✅ ${r.ok} eventos enviados a Google Calendar`);
+}
+async function exportDayGCal(day){
+  if(!gcalAuthed){exportDayICS(day);return;}
+  const r=await pushToGCal([day]);
+  showToast(`✅ ${r.ok} evento(s) de ${day} exportados`);
+}
 
 // ═══ PWA ═══
 let deferredPrompt=null;
