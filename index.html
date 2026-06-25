@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1069,15 +1070,14 @@ function agregarAlCronograma(){
   for(const day of r.order){
     const evs=r.days[day];
     if(!allDays[day]){
-      // día nuevo — agregar completo
       allDays[day]=evs;
+      allDays[day]._date=r.days[day]._date;
       dayOrder.push(day);
       monthOf[day]=r.monthOf[day];
       nuevos+=evs.length;
     } else {
-      // día existente — agregar solo eventos que no choquen en hora
       for(const ev of evs){
-        const yaExiste=allDays[day].some(e=>e.hora&&e.hora===ev.hora&&e.grupo===ev.grupo);
+        const yaExiste=allDays[day].some(e=>e.hora&&ev.hora&&e.hora.toLowerCase()===ev.hora.toLowerCase()&&(e.grupo||"").toLowerCase()===(ev.grupo||"").toLowerCase());
         if(!yaExiste){allDays[day].push(ev);nuevos++;}
         else duplicados++;
       }
